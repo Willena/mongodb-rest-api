@@ -13,9 +13,10 @@ const ErrormMessageService = require('./services/ErrorMessageService');
 const logger = require('./logger');
 
 class ExpressServer {
-  constructor(port, openApiYaml) {
+  constructor(port, address, openApiYaml) {
     console.log(openApiYaml)
     this.port = port;
+    this.address = address;
     this.app = express();
     this.openApiPath = openApiYaml;
     this.schema = yamljs.load(openApiYaml);
@@ -75,7 +76,7 @@ class ExpressServer {
       async (resolve, reject) => {
         try {
           this.addErrorHandler();
-          this.server = await this.app.listen(this.port, () => {
+          this.server = await this.app.listen(this.port, this.address, () => {
             console.log(`server running on port ${this.port}`);
             resolve(this.server);
           });
