@@ -20,6 +20,12 @@ X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
 
 ###
 
+
+GET http://localhost:3000/api/database/ANFR/SUPPORTS/find?query={}
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+
 GET http://localhost:3000/api/database/ANFR/SUPPORTS/one?query={"TPO_ID":10}
 X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
 

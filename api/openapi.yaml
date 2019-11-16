@@ -248,10 +248,10 @@ paths:
             type: string
           style: simple
         - in: query
-          name: query
           required: true
+          name: query
           schema:
-            type: object
+            type: string
       responses:
         200:
           content:
@@ -293,7 +293,7 @@ paths:
           explode: true
           in: query
           name: query
-          required: false
+          required: true
           schema:
             type: string
           style: form
