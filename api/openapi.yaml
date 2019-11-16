@@ -1,0 +1,1107 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: guillaume@villena.me
+  description: Generic REST API for mongodb
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: MongoDb REST API
+  version: 1.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://localhost/api/
+tags:
+  - description: Operations available to all users
+    name: users
+paths:
+  /status:
+    get:
+      description: |
+        Returns an Object representing the current status of the API. Such as the number requests per second, the uptime, the version, a link to the associated documentation, and a list of available endpoints with required parameters
+      operationId: printStatus
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/statusItemResponse'
+          description: search results matching criteria
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+      summary: print the current status of the API
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /logout:
+    post:
+      operationId: logoutDatabase
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/logoutItem'
+          description: Informations about the user beeing loged out
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+      security:
+        - ApiKeyAuth: []
+      summary: Logout from the API and the database
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /login:
+    post:
+      description: |
+        The endpoint allows the user to log it self to a mongodb database. The returned object will inform the user of a potential faillure while trying to access the database. After N failed tries the server will stop responding to request comming from your IP. On login success you will get a uniq token with an expiration date. The token should be renewed before the expiration. You can do that be using the login endpoint with the old token and a new token will be issued.
+      operationId: loginDatabase
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginItemRequest'
+        description: Inventory item to add
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginItemResponse200'
+          description: search results matching criteria
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginItemResponse400'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+      summary: Login to a remote database
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database:
+    get:
+      description: This endpoint allow users to list the available databases
+      operationId: listDatabases
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseListItemResponse'
+          description: database list
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: List available database for a given connection (token)
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}:
+    delete:
+      description: Return informations about this delete action on the database
+      operationId: databaseDatabaseNameDELETE
+      parameters:
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseDeletedItem'
+          description: database informations
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: Delete the database
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+    get:
+      description: Return informations about this single database
+      operationId: databaseDatabaseNameGET
+      parameters:
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleDatabaseInfoItem'
+          description: database informations
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: Get information from database
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}/{collectionName}/find:
+    get:
+      operationId: databaseDatabaseNameCollectionNameFindGET
+      parameters:
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: Name of the desired collection
+          explode: false
+          in: path
+          name: collectionName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - in: query
+          name: query
+          required: true
+          schema:
+            type: object
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResultItem'
+          description: information about the collection
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: Query the database
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}/{collectionName}/one:
+    get:
+      operationId: databaseDatabaseNameCollectionNameOneGET
+      parameters:
+        - description: The query to be passed through mongoDB
+          explode: true
+          in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: Name of the desired collection
+          explode: false
+          in: path
+          name: collectionName
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleDocumentResultItem'
+          description: The result of deletion
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: find one item in the collection
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}/{collectionName}/aggregate:
+    get:
+      operationId: databaseDatabaseNameCollectionNameAggregateGET
+      parameters:
+        - description: The query to be passed through mongoDB
+          explode: true
+          in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: Name of the desired collection
+          explode: false
+          in: path
+          name: collectionName
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResultItem'
+          description: The result of deletion
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: An aggregate query
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}/{collectionName}/insert:
+    post:
+      operationId: databaseDatabaseNameCollectionNameInsertPOST
+      parameters:
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: Name of the desired collection
+          explode: false
+          in: path
+          name: collectionName
+          required: true
+          schema:
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/DocumentsItem'
+                - $ref: '#/components/schemas/DocumentItem'
+        description: Inventory item to add
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsertSuccessItem'
+          description: documents corresponding to the query
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: Insert one or multiple new documents in collection
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}/{collectionName}/remove:
+    delete:
+      operationId: databaseDatabaseNameCollectionNameRemoveDELETE
+      parameters:
+        - description: The query to be passed through mongoDB
+          explode: true
+          in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: Name of the desired collection
+          explode: false
+          in: path
+          name: collectionName
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDeleteDocument'
+          description: The result of deletion
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: Remove many document from the collection
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}/{collectionName}/removeOne:
+    delete:
+      operationId: databaseDatabaseNameCollectionNameRemoveOneDELETE
+      parameters:
+        - description: The query to be passed through mongoDB
+          explode: true
+          in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: Name of the desired collection
+          explode: false
+          in: path
+          name: collectionName
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDeleteDocument'
+          description: The result of deletion
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: Remove a document from the collection
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}/{collectionName}/updateOne:
+    put:
+      operationId: databaseDatabaseNameCollectionNameUpdateOnePUT
+      parameters:
+        - description: The query to be passed through mongoDB
+          explode: true
+          in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: Name of the desired collection
+          explode: false
+          in: path
+          name: collectionName
+          required: true
+          schema:
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: object that represent the operation to apply
+              type: object
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultUpdate'
+          description: The resultat of update
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: update a document
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+  /database/{databaseName}/{collectionName}/update:
+    put:
+      operationId: databaseDatabaseNameCollectionNameUpdatePUT
+      parameters:
+        - description: The query to be passed through mongoDB
+          explode: true
+          in: query
+          name: query
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Name of database
+          explode: false
+          in: path
+          name: databaseName
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: Name of the desired collection
+          explode: false
+          in: path
+          name: collectionName
+          required: true
+          schema:
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: object that represent the operation to apply
+              type: object
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultUpdate'
+          description: The result of deletion
+        401:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedItemResponse'
+          description: bad input parameter
+        403:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbidenItemResponse'
+          description: bad input parameter
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoDBErrorItemResponse'
+          description: Error while processing mongodb request on the server
+      security:
+        - ApiKeyAuth: []
+      summary: find and modifiy one or many documents
+      tags:
+        - users
+      x-swagger-router-controller: Users
+      x-openapi-router-controller: UsersController
+      x-openapi-router-service: UsersService
+components:
+  schemas:
+    InsertSuccessItem:
+      example:
+        success: true
+        count: 2
+      properties:
+        success:
+          example: true
+          type: boolean
+        count:
+          example: 2
+          type: number
+      required:
+        - count
+        - success
+      type: object
+    DocumentResultItem:
+      example:
+        data:
+          - {}
+          - {}
+        success: true
+      properties:
+        success:
+          type: boolean
+        data:
+          items:
+            $ref: '#/components/schemas/DocumentItem'
+          type: array
+      required:
+        - data
+        - success
+      type: object
+    SingleDocumentResultItem:
+      example:
+        data: {}
+        success: true
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+      required:
+        - data
+        - success
+      type: object
+    DocumentItem:
+      type: object
+    DocumentsItem:
+      items:
+        $ref: '#/components/schemas/DocumentItem'
+      type: array
+    ResultUpdate:
+      example:
+        success: true
+        count : 6
+      properties:
+        success:
+          type: boolean
+        count:
+          type: number
+      required:
+        - count
+        - success
+      type: object
+    collectionInformationItem:
+      example:
+        size: 6.027456183070403
+        success: true
+        name: name
+        doc_number: 0.8008281904610115
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string
+        doc_number:
+          type: number
+        size:
+          type: number
+      required:
+        - name
+        - success
+      type: object
+    SingleDatabaseInfoItem:
+      example:
+        collections:
+          - size: 6.027456183070403
+            success: true
+            name: name
+            doc_number: 0.8008281904610115
+          - size: 6.027456183070403
+            success: true
+            name: name
+            doc_number: 0.8008281904610115
+        success: true
+      properties:
+        success:
+          type: boolean
+        collections:
+          items:
+            $ref: '#/components/schemas/collectionInformationItem'
+          type: array
+      required:
+        - collections
+        - success
+      type: object
+    DatabaseListItemResponse:
+      example:
+        databases:
+          - databases
+          - databases
+        success: true
+      properties:
+        success:
+          type: boolean
+        databases:
+          items:
+            type: string
+          type: array
+      required:
+        - databases
+        - success
+      type: object
+    ResultDeleteDocument:
+      example:
+        success: true
+        count: 5
+      properties:
+        success:
+          type: boolean
+        count:
+          type: number
+      required:
+        - success
+      type: object
+    DatabaseDeletedItem:
+      example:
+        success: true
+        name: name
+      properties:
+        success:
+          type: boolean
+        name:
+          type: string
+      required:
+        - name
+        - success
+      type: object
+    logoutItem:
+      example:
+        success: true
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+      type: object
+    loginItemRequest:
+      properties:
+        hosts:
+          type: array
+          items:
+            type: object
+            required:
+              - host
+              - port
+            properties:
+              host:
+                type: string
+              port:
+                type: number
+        username:
+          example: user
+          type: string
+        password:
+          example: thepassword
+          type: string
+        options:
+          example: '{"option1":false}'
+          type: object
+      required:
+        - hosts
+        - password
+        - username
+      type: object
+    loginItemResponse200:
+      example:
+        success: true
+        token: d290f1ee-6c54-4b01-90e6-d701748f0852
+      properties:
+        success:
+          type: boolean
+        token:
+          example: d290f1ee-6c54-4b01-90e6-d701748f0852
+          format: uuid
+          type: string
+      required:
+        - success
+      type: object
+    loginItemResponse400:
+      properties:
+        success:
+          example: false
+          type: boolean
+        message:
+          example: Username host or password is invalid. Impossible to connect to
+            host
+          type: string
+        retries:
+          description: number retries
+          example: 2
+          maximum: 5
+          minimum: 0
+          type: number
+      required:
+        - message
+        - retries
+        - success
+      type: object
+    UnauthorizedItemResponse:
+      properties:
+        success:
+          example: false
+          type: boolean
+        message:
+          example: Access to this ressouce is not authorized
+          type: string
+        retries:
+          example: 3
+          type: number
+      required:
+        - message
+        - retries
+        - success
+      type: object
+    ForbidenItemResponse:
+      properties:
+        success:
+          example: false
+          type: boolean
+        message:
+          example: Access forbiden. Did you execess the number of retries ?
+          type: string
+      required:
+        - message
+        - success
+      type: object
+    MongoDBErrorItemResponse:
+      properties:
+        success:
+          example: false
+          type: boolean
+        message:
+          example: E0023 Invalid request sent to mongodb
+          type: string
+        code:
+          example: E0023
+          type: string
+      required:
+        - code
+        - message
+        - success
+      type: object
+    statusItemResponse:
+      example:
+        date: 2000-01-23
+        nodename: node01-api
+        endpoints:
+          - name: /v1/status
+            parameters:
+              - name: age
+                doc: filter by age
+                type: number, int, ...
+                mandatory: true
+              - name: age
+                doc: filter by age
+                type: number, int, ...
+                mandatory: true
+          - name: /v1/status
+            parameters:
+              - name: age
+                doc: filter by age
+                type: number, int, ...
+                mandatory: true
+              - name: age
+                doc: filter by age
+                type: number, int, ...
+                mandatory: true
+        stats: 336
+        documentation: http://doc.mongo-rest.github.io/
+        version: 1.0.0
+        uptime: 355153322
+      properties:
+        uptime:
+          description: How long the server is running in seconds
+          example: 355153322
+          type: number
+        date:
+          description: The current API server date
+          format: date
+          type: string
+        stats:
+          description: The number of request processed each seconds
+          example: 336
+          type: number
+        version:
+          description: Version of the running api
+          example: 1.0.0
+          format: version
+          type: string
+        documentation:
+          description: A link to the online documentation of the API
+          example: http://doc.mongo-rest.github.io/
+          format: url
+          type: string
+        endpoints:
+          description: A list of available API endpoints and their parametter
+          items:
+            $ref: '#/components/schemas/EndpointItem'
+          type: array
+        nodename:
+          description: The node name running the api
+          example: node01-api
+          type: string
+      required:
+        - date
+        - documentation
+        - endpoints
+        - nodename
+        - stats
+        - uptime
+        - version
+      type: object
+    EndpointItem:
+      example:
+        name: /v1/status
+        parameters:
+          - name: age
+            doc: filter by age
+            type: number, int, ...
+            mandatory: true
+          - name: age
+            doc: filter by age
+            type: number, int, ...
+            mandatory: true
+      properties:
+        name:
+          example: /v1/status
+          type: string
+        parameters:
+          items:
+            $ref: '#/components/schemas/EndpointParameterItem'
+          type: array
+      type: object
+    EndpointParameterItem:
+      example:
+        name: age
+        doc: filter by age
+        type: number, int, ...
+        mandatory: true
+      properties:
+        name:
+          example: age
+          type: string
+        doc:
+          example: filter by age
+          type: string
+        type:
+          example: number, int, ...
+          type: string
+        mandatory:
+          example: true
+          type: boolean
+      type: object
+  securitySchemes:
+    ApiKeyAuth:
+      in: header
+      name: X-TOKEN
+      type: apiKey

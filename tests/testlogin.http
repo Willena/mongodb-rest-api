@@ -1,0 +1,117 @@
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "username": "",
+  "password": "",
+  "hosts": [
+    {
+      "host": "localhost",
+      "port": 27017
+    }
+  ]
+}
+
+###
+
+
+GET http://localhost:3000/api/database/ANFR/SUPPORTS/find?query={"SUP_ID":74185}
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+
+GET http://localhost:3000/api/database/ANFR/SUPPORTS/one?query={"TPO_ID":10}
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+GET http://localhost:3000/api/database/ANFR/STATIONS/aggregate?query=[{"$group":{"_id": "$ADM_ID","nb_stations":{"$sum":1}}}]
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+
+POST http://localhost:3000/api/database/ANFR/test/insert
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+Content-Type: application/json
+
+{
+  "simpleDoc": "abs",
+  "name": "tot",
+  "age": 25
+}
+
+###
+
+POST http://localhost:3000/api/database/ANFR/test/insert
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+Content-Type: application/json
+
+[
+  {
+    "simpleDoc": "abs",
+    "name": "tot",
+    "age": 1
+  },
+  {
+    "simpleDoc": "abs",
+    "name": "tot",
+    "age": 2
+  }
+]
+
+###
+DELETE http://localhost:3000/api/database/ANFR/test/remove?query={"age": {"$gte": 1}}
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+DELETE http://localhost:3000/api/database/ANFR/test/removeOne?query={"age": {"$gte": 1}}
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+
+###
+
+PUT http://localhost:3000/api/database/ANFR/test/updateOne?query={"age": {"$gte": 1}}
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+Content-Type: application/json
+
+{
+  "$set": {
+    "age": 36
+  }
+}
+
+###
+
+PUT http://localhost:3000/api/database/ANFR/test/update?query={"age": {"$gte": 1}}
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+Content-Type: application/json
+
+{
+  "$set": {
+    "age": 56
+  }
+}
+
+###
+
+GET http://localhost:3000/api/database/
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+
+DELETE http://localhost:3000/api/database/test
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+
+
+GET http://localhost:3000/api/database/ANFR
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+
+POST http://localhost:3000/api/logout
+X-TOKEN: bb8830ae-f1ff-471c-882d-18f72adb707e
+
+###
+
+
