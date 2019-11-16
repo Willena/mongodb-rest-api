@@ -825,9 +825,7 @@ components:
         success:
           type: boolean
         collections:
-          items:
-            $ref: '#/components/schemas/collectionInformationItem'
-          type: array
+          type: object
       required:
         - collections
         - success

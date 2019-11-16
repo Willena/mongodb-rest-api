@@ -266,19 +266,17 @@ class UsersService {
                 //TODO : ​/database​/{databaseName} Get information from database
                 try {
                     const databaseInfo = await request.userSession.getMongodbInstance().db(params.databaseName).stats();
-                    const collectionsInfo = await request.userSession.getMongodbInstance().db(params.databaseName).listCollections();
+                    const collectionsInfo = await request.userSession.getMongodbInstance().db(params.databaseName).listCollections().toArray();
                     const collectionStats = {};
-                    collectionsInfo.forEach(async function (element) {
+                    for (const element of collectionsInfo)
+                    {
                         const stats_collection = await request.userSession.getMongodbInstance().db(params.databaseName).collection(element.name).stats();
                         collectionStats[element.name] = stats_collection
-                    }).then(function () {
-                        resolve(Service.successResponse(collectionStats));
-                    });
+                    }
+                    resolve(AnswerMessageService.databaseInfoResponse(databaseInfo, collectionStats));
+
                 } catch (e) {
-                    resolve(Service.rejectResponse(
-                        e.message || 'Invalid input',
-                        e.status || 405,
-                    ));
+                    resolve(ErrorMessagesService.MongoDBErrorItemResponse(e));
                 }
             },
         );

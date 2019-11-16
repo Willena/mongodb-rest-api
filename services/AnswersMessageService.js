@@ -29,3 +29,10 @@ module.exports.documentsResult = function (items) {
 module.exports.insertDeleteUpdateSucess = function (result) {
     return Service.successResponse({success: true, count: result.result.n})
 };
+
+module.exports.databaseInfoResponse = function (databaseInfo, collectionsInfos) {
+    console.log(databaseInfo, collectionsInfos)
+    databaseInfo['success'] = true;
+    databaseInfo['collections'] = collectionsInfos;
+    return Service.successResponse(databaseInfo)
+};
