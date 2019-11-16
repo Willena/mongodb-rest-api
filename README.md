@@ -1,6 +1,8 @@
 # MongoDB rest API
 
-The documentation is available at https://app.swaggerhub.com/apis-docs/Willena/mongodb-rest-api/1.0.0 and also on http://localhost:3000/api-docs if you start the server
+The documentation is available at https://app.swaggerhub.com/apis-docs/Willena/mongodb-rest-api/1.0.0 and also on http://localhost:3000/api-docs if you start the server.
+
+You can try this API live at https://antennes-radio.alwaysdata.net/api/
 
 ## Overview
 
