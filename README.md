@@ -10,6 +10,12 @@ I designed this API to be as generic as possible and as close as possible to the
 * Simple generic interface to the Mongodb nodeJs driver
 * queries sent as json in requests
 
+## Bugs & Pull-Request
+
+If you find a bug do not hesitate to open a new issue on the repo. 
+
+Pull-request for new feature or bug correction are welcomed ! Feel free to contribute ! 
+
 ## Example:
 
 1. Login to the API (create a server connection on the API server side)
