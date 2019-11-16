@@ -327,8 +327,7 @@ class UsersService {
                         }
 
                         const session = new RuntimeSession();
-                        //session.generateToekn();
-                        session.token = 'bb8830ae-f1ff-471c-882d-18f72adb707e';
+                        session.generateToekn();
                         session.setMongodbInstance(client);
                         request.app.authenticationManager.addSession(session);
                         resolve(AnswerMessageService.loginAnswer(session))
