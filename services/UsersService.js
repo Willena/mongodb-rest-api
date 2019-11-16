@@ -76,7 +76,7 @@ class UsersService {
                 try {
                     const collection = request.userSession.getMongodbInstance().db(params.databaseName).collection(params.collectionName);
                     let data = (Array.isArray(params.body)) ? params.body : [params.body];
-                    console.log(data)
+                    console.log(data);
                     collection.insertMany(data, (err, result) => {
                         if (err) {
                             resolve(ErrorMessagesService.MongoDBErrorItemResponse(err));
@@ -193,7 +193,7 @@ class UsersService {
                 try {
                     request.userSession.getMongodbInstance().db(params.databaseName).collection(params.collectionName).updateOne(JSON.parse(params.query), params.body, (err, result) => {
                         if (err){
-                            resolve(ErrorMessagesService.MongoDBErrorItemResponse(err))
+                            resolve(ErrorMessagesService.MongoDBErrorItemResponse(err));
                             return
                         }
                         console.log(err, result);
@@ -263,15 +263,13 @@ class UsersService {
     static databaseDatabaseNameGET(params, request) {
         return new Promise(
             async (resolve) => {
-                //TODO : ​/database​/{databaseName} Get information from database
                 try {
                     const databaseInfo = await request.userSession.getMongodbInstance().db(params.databaseName).stats();
                     const collectionsInfo = await request.userSession.getMongodbInstance().db(params.databaseName).listCollections().toArray();
                     const collectionStats = {};
                     for (const element of collectionsInfo)
                     {
-                        const stats_collection = await request.userSession.getMongodbInstance().db(params.databaseName).collection(element.name).stats();
-                        collectionStats[element.name] = stats_collection
+                        collectionStats[element.name] = await request.userSession.getMongodbInstance().db(params.databaseName).collection(element.name).stats()
                     }
                     resolve(AnswerMessageService.databaseInfoResponse(databaseInfo, collectionStats));
 
